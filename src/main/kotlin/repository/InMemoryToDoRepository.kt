@@ -6,7 +6,7 @@ import entities.ToDoDraft
 class  InMemoryToDoRepository: ToDoRepository {
 
     private val todos = mutableListOf<ToDo>(
-        ToDo(1, "Some name", true)
+        ToDo(1, "Some name", "In progress")
     )
 
     override fun getAllTodos(): List<ToDo> {
@@ -21,7 +21,7 @@ class  InMemoryToDoRepository: ToDoRepository {
         val todo = ToDo(
             id = todos.size + 1,
             title = draft.title,
-            done = draft.done
+            status = draft.status
         )
         todos.add(todo)
         return todo
@@ -36,7 +36,7 @@ class  InMemoryToDoRepository: ToDoRepository {
             ?: return false
 
         todo.title = draft.title
-        todo.done = draft.done
+        todo.status = draft.status
         return true
     }
 }

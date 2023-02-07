@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import entities.AuthDraft
 import entities.ToDoDraft
 import entities.UserDraft
 import io.ktor.server.routing.*
@@ -7,15 +8,13 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
-import repository.InMemoryToDoRepository
-import repository.InMemoryUserRepository
-import repository.ToDoRepository
-import repository.UserRepository
+import repository.*
 
 fun Application.configureRouting() {
 
     val repository: ToDoRepository = InMemoryToDoRepository()
     val userRepository: UserRepository = InMemoryUserRepository()
+    val authRepository: AuthRepository = InMemoryAuthRepository()
 
     routing {
         get("/") {
@@ -109,6 +108,7 @@ fun Application.configureRouting() {
                         "Email or password is incorrect"
                     )
                 } else {
+                    authRepository.addAuth(AuthDraft(user.id))
                     call.respond(user)
                 }
             }
@@ -126,6 +126,41 @@ fun Application.configureRouting() {
                         HttpStatusCode.OK,
                         "User with this email already registered"
                     )
+                }
+            }
+        }
+
+        route("/auth") {
+            get("/{id}") {
+                val id = call.parameters["id"].toString()
+
+                val todo = authRepository.getAuth(id)
+
+                if (todo == null) {
+                    call.respond(
+                        HttpStatusCode.NotFound,
+                        "LOGOUT"
+                    )
+                } else {
+                    call.respond(todo)
+                }
+            }
+            post {
+                val authDraft = call.receive<AuthDraft>()
+
+                val todo = authRepository.addAuth(authDraft)
+                call.respond(todo)
+            }
+
+            delete("/{id}") {
+                val authId = call.parameters["id"].toString()
+
+                val removed = authRepository.removeAuth(authId)
+                if (removed) {
+                    call.respond(HttpStatusCode.OK)
+                } else {
+                    call.respond(HttpStatusCode.NotFound,
+                        "found no todo with the id $authId")
                 }
             }
         }

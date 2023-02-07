@@ -3,7 +3,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class ToDoDraft(
-    val title: String,
-    val status: String
+data class AuthDraft(
+    val id: String,
 )

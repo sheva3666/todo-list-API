@@ -15,6 +15,7 @@ fun main() {
 fun Application.module() {
     install(CORS) {
     allowHost("*")
+        allowMethod(HttpMethod.Delete)
     allowHeader(HttpHeaders.ContentType)
 }
     configureSerialization()
