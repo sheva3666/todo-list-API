@@ -6,7 +6,9 @@ import entities.ToDoDraft
 interface ToDoRepository {
     fun getAllTodos(): List<ToDo>
 
-    fun getToDo(id: Int): ToDo?
+    fun getToDo(id: Int, userId: String): ToDo?
+
+    fun getToDosForUser(userId: String): List<ToDo>?
 
     fun addToDo(draft: ToDoDraft): ToDo
 

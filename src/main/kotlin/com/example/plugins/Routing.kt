@@ -21,30 +21,40 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
         route("/todos") {
-            get {
-                if (repository.getAllTodos().isNotEmpty()) {
-                    call.respond(repository.getAllTodos())
+            get("/{userId}") {
+                val userId = call.parameters["userId"].toString()
+
+                val todos = repository.getToDosForUser(userId)
+
+                if (todos == null) {
+                    call.respond(
+                        HttpStatusCode.NotFound,
+                        "Found no todo for $userId"
+                    )
                 } else {
-                    call.respondText("No todos created yet")
+                    call.respond(todos)
                 }
             }
-            get("/{id}") {
-                val id = call.parameters["id"]?.toIntOrNull()
 
-                if (id == null) {
+            get("/{userId}/{todoId}") {
+                val todoId = call.parameters["todoId"]?.toIntOrNull()
+                val userId = call.parameters["userId"].toString()
+
+
+                if (todoId == null) {
                     call.respond(
                         HttpStatusCode.BadRequest,
-                        "id parameter has to be a number"
+                        "id parameter of todo has to be a number"
                     )
                     return@get
                 }
 
-                val todo = repository.getToDo(id)
+                val todo = repository.getToDo(todoId, userId)
 
                 if (todo == null) {
                     call.respond(
                         HttpStatusCode.NotFound,
-                        "Found no todo for the provided id $id"
+                        "Found no todo for user $userId with provided id $todoId"
                     )
                 } else {
                     call.respond(todo)
