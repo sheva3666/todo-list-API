@@ -6,7 +6,7 @@ import entities.UserDraft
 class  InMemoryUserRepository: UserRepository {
 
     private val users = mutableListOf<User>(
-        User("admin@mail.com", "admin", "admin@mail.com", "admin")
+        User("admin", "admin", "admin", "admin")
     )
 
     override fun getUser(id: String, password: String): User? {

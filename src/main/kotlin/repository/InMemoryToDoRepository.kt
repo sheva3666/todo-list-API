@@ -39,7 +39,7 @@ class  InMemoryToDoRepository: ToDoRepository {
     }
 
     override fun updateToDo(id: Int, draft: ToDoDraft): Boolean {
-        val todo = todos.firstOrNull {it.id == id}
+        var todo = todos.firstOrNull {it.id == id}
             ?: return false
 
         todo.title = draft.title
