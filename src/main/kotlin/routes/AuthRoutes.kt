@@ -1,7 +1,5 @@
 package routes
 
-import entities.AuthDraft
-import entities.UserDraft
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
